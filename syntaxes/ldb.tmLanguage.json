@@ -1,0 +1,24 @@
+{
+	"name": "Logical signature",
+	"patterns": [
+		{
+			"include": "#ruleNames"
+		},
+		{
+			"include": "#semiColons"
+		}
+	],
+	"repository": {
+		"ruleNames": {
+			"patterns": [{
+				"name": "variable.other.ldb",
+				"match": "^(\\d|\\w|_)+"
+			}]
+		},
+		"semiColons": {
+			"name": "keyword.other.ldb",
+			"match": ";"
+		}
+	},
+	"scopeName": "source.ldb"
+}

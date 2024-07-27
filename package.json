@@ -1,0 +1,25 @@
+{
+  "name": "clamli",
+  "displayName": "ClamLi",
+  "description": "VsCode extention aiming at making ClamAV rules easier.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.91.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "ldb",
+      "aliases": ["Logical signature", "ldb"],
+      "extensions": [".ldb"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "ldb",
+      "scopeName": "source.ldb",
+      "path": "./syntaxes/ldb.tmLanguage.json"
+    }]
+  }
+}
