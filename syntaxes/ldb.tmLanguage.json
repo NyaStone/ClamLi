@@ -28,11 +28,14 @@
 		"options": {
 			"name": "meta.options.ldb",
 			"begin": "(,)?(Engine|Target|FileSize|EntryPoint|NumberOfSections|Container|Intermediates|IconGroup1|IconGroup2)(:)",
-			"end": "\\n",
+			"end": "(,)|\\n",
 			"beginCaptures": { 
-				"1": {"name": "keyword.operator.coma.ldb"},
+				"1": {"name": "keyword.operator.colon.ldb"},
 				"2": {"name": "keyword.other.option.ldb"},
 				"3": {"name": "keyword.operator.colon.ldb"}
+			},
+			"endCaptures": {
+				"1": {"name": "keyword.operator.coma.ldb"}
 			},
 			"patterns": [
 				{"include": "#options"}
