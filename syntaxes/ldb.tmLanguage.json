@@ -1,23 +1,42 @@
 {
 	"name": "Logical signature",
 	"patterns": [
-		{
-			"include": "#ruleNames"
-		},
-		{
-			"include": "#semiColons"
-		}
+		{"include": "#ruleNames"},
+
+		{"include": "#targetDescriptionBlock"}
 	],
 	"repository": {
 		"ruleNames": {
 			"patterns": [{
-				"name": "variable.other.ldb",
+				"name": "variable.other.ldb.ruleName",
 				"match": "^(\\d|\\w|_)+"
 			}]
 		},
-		"semiColons": {
+		"targetDescriptionBlock": {
+			"name" : "meta.ldb.targetDescriptionBlock",
+			"begin": "(;)",
+			"end": "\\n",
+			"beginCaptures": { "1": {"name": "keyword.operator.semicolon.ldb"}},
+			"patterns": [
+				{"include": "#options"}
+			]
+		},
+		"keywords": {
 			"name": "keyword.other.ldb",
-			"match": ";"
+			"match": "Engine|Target|FileSize|EntryPoint|NumberOfSections|Container|Intermediates|IconGroup1|IconGroup2"
+		},
+		"options": {
+			"name": "meta.options.ldb",
+			"begin": "(,)?(Engine|Target|FileSize|EntryPoint|NumberOfSections|Container|Intermediates|IconGroup1|IconGroup2)(:)",
+			"end": "\\n",
+			"beginCaptures": { 
+				"1": {"name": "keyword.operator.coma.ldb"},
+				"2": {"name": "keyword.other.option.ldb"},
+				"3": {"name": "keyword.operator.colon.ldb"}
+			},
+			"patterns": [
+				{"include": "#options"}
+			]
 		}
 	},
 	"scopeName": "source.ldb"
