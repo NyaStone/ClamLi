@@ -1,45 +1,68 @@
 {
 	"name": "Logical signature",
 	"patterns": [
-		{"include": "#ruleNames"},
-
-		{"include": "#targetDescriptionBlock"}
+		{"include": "#logicalSignature"}
 	],
 	"repository": {
-		"ruleNames": {
-			"patterns": [{
-				"name": "variable.other.ldb.ruleName",
-				"match": "^(\\d|\\w|_)+"
-			}]
+		"logicalSignature": {
+			"contentName": "entity.ldb.logicalSignature",
+			"begin": "([^;]*)(?=;)",
+			"end": "(?<=[^;\\s])[\\r\\n]",
+			"beginCaptures": {
+				"1": {"name": "variable.other.ldb.signatureName"}
+			},
+			"patterns": [
+				{"include": "#targetDescriptionBlock"}
+			]
 		},
 		"targetDescriptionBlock": {
-			"name" : "meta.ldb.targetDescriptionBlock",
-			"begin": "(;)",
-			"end": "\\n",
-			"beginCaptures": { "1": {"name": "keyword.operator.semicolon.ldb"}},
-			"patterns": [
-				{"include": "#options"}
-			]
-		},
-		"keywords": {
-			"name": "keyword.other.ldb",
-			"match": "Engine|Target|FileSize|EntryPoint|NumberOfSections|Container|Intermediates|IconGroup1|IconGroup2"
-		},
-		"options": {
-			"name": "meta.options.ldb",
-			"begin": "(,)?(Engine|Target|FileSize|EntryPoint|NumberOfSections|Container|Intermediates|IconGroup1|IconGroup2)(:)",
-			"end": "(,)|\\n",
+			"contentName" : "meta.ldb.targetDescriptionBlock",
+			"begin": "(?<!;.*)(;)",
+			"end": "(?<=\\1[^;]*);",
 			"beginCaptures": { 
-				"1": {"name": "keyword.operator.colon.ldb"},
-				"2": {"name": "keyword.other.option.ldb"},
-				"3": {"name": "keyword.operator.colon.ldb"}
-			},
-			"endCaptures": {
-				"1": {"name": "keyword.operator.coma.ldb"}
+				"1": {"name": "punctuation.semicolon.ldb"}
 			},
 			"patterns": [
-				{"include": "#options"}
+				{"include": "#engineOption"},
+				{"include": "#rangeOption"}
 			]
+			
+			
+		},
+
+		"engineOption": {
+			"name": "meta.options.ldb",
+			"begin": "(?<=;\\s*)(Engine)(:)",
+			"end": ",|;",
+			"beginCaptures": { 
+				"1": {"name": "keyword.option.engine.ldb"},
+				"2": {"name": "punctuation.colon.ldb"}
+			},
+			"patterns": [
+				{"include": "#range"}
+			]
+		},
+		"rangeOption": {
+			"name": "meta.options.ldb",
+			"begin": "(FileSize|EntryPoint|NumberOfSections|IconGroup1|IconGroup2)(:)",
+			"end": ",|;",
+			"beginCaptures": { 
+				"1": {"name": "keyword.option.rangeOption.ldb"},
+				"2": {"name": "punctuation.colon.ldb"}
+			},
+			"patterns": [
+				{"include": "#range"}
+			]
+		},
+
+
+		"range": {
+			"match": "(\\d+)(-)(\\d+)",
+			"captures": {
+				"1": {"name": "constant.numeric.integer.ldb"},
+				"2": {"name": "punctuation.hyphen.ldb"},
+				"3": {"name": "constant.numeric.integer.ldb"}
+			}
 		}
 	},
 	"scopeName": "source.ldb"
