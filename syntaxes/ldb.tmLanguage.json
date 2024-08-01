@@ -7,7 +7,7 @@
 		"logicalSignature": {
 			"contentName": "entity.ldb.logicalSignature",
 			"begin": "([^;]*)(?=;)",
-			"end": "(?<=[^;\\s])[\\r\\n]",
+			"end": "(?<=[^;][\\s\\r\\n]*)[\\r\\n]",
 			"beginCaptures": {
 				"1": {"name": "variable.other.ldb.signatureName"}
 			},
@@ -17,7 +17,7 @@
 		},
 		"targetDescriptionBlock": {
 			"contentName" : "meta.ldb.targetDescriptionBlock",
-			"begin": "(?<!;.*)(;)",
+			"begin": "(?<=\\G)(;)",
 			"end": "(?<=\\1[^;]*);",
 			"beginCaptures": { 
 				"1": {"name": "punctuation.semicolon.ldb"}
