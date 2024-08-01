@@ -27,8 +27,6 @@
 				{"include": "#rangeOption"},
 				{"include": "#targetOption"}
 			]
-			
-			
 		},
 
 		"engineOption": {
@@ -66,7 +64,11 @@
 			"patterns": [
 				{
 					"name": "constant.numeric.fileType.ldb",
-					"match": "[0-12](?!\\d)"
+					"match": "(?<!\\d)\\d(?!\\d)"
+				},
+				{
+					"name": "constant.numeric.fileType.ldb",
+					"match": "(?<!\\d)1[012](?!\\d)"
 				}
 			]
 		},
