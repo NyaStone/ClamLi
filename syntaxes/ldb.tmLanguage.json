@@ -17,8 +17,8 @@
 		},
 		"targetDescriptionBlock": {
 			"contentName" : "meta.ldb.targetDescriptionBlock",
-			"begin": "(?<=\\G)(;)",
-			"end": "(?<=\\1[^;]*);",
+			"begin": "(?<=\\G)(;)\\n*",
+			"end": "(?<=\\1[^;]*);\\n*",
 			"beginCaptures": { 
 				"1": {"name": "punctuation.semicolon.ldb"}
 			},
@@ -32,8 +32,8 @@
 
 		"engineOption": {
 			"name": "meta.options.ldb",
-			"begin": "(?<=;\\s*)(Engine)(:)",
-			"end": ",|;",
+			"begin": "(?<=\\G)(Engine)(:)",
+			"end": ",|.(?=;)",
 			"beginCaptures": { 
 				"1": {"name": "keyword.option.engine.ldb"},
 				"2": {"name": "punctuation.colon.ldb"}
@@ -45,7 +45,7 @@
 		"rangeOption": {
 			"name": "meta.options.ldb",
 			"begin": "(FileSize|EntryPoint|NumberOfSections|IconGroup1|IconGroup2)(:)",
-			"end": ",|;",
+			"end": ",|.(?=;)",
 			"beginCaptures": { 
 				"1": {"name": "keyword.option.rangeOption.ldb"},
 				"2": {"name": "punctuation.colon.ldb"}
