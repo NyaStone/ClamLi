@@ -18,13 +18,14 @@
 		"targetDescriptionBlock": {
 			"contentName" : "meta.ldb.targetDescriptionBlock",
 			"begin": "(?<=\\G)(;)\\n*",
-			"end": "(?<=\\1[^;]*);\\n*",
+			"end": "(?<=\\1[^;]*;)\\n*",
 			"beginCaptures": { 
 				"1": {"name": "punctuation.semicolon.ldb"}
 			},
 			"patterns": [
 				{"include": "#engineOption"},
-				{"include": "#rangeOption"}
+				{"include": "#rangeOption"},
+				{"include": "#targetOption"}
 			]
 			
 			
@@ -33,7 +34,7 @@
 		"engineOption": {
 			"name": "meta.options.ldb",
 			"begin": "(?<=\\G)(Engine)(:)",
-			"end": ",|.(?=;)",
+			"end": ",|;",
 			"beginCaptures": { 
 				"1": {"name": "keyword.option.engine.ldb"},
 				"2": {"name": "punctuation.colon.ldb"}
@@ -45,13 +46,28 @@
 		"rangeOption": {
 			"name": "meta.options.ldb",
 			"begin": "(FileSize|EntryPoint|NumberOfSections|IconGroup1|IconGroup2)(:)",
-			"end": ",|.(?=;)",
+			"end": ",|;",
 			"beginCaptures": { 
 				"1": {"name": "keyword.option.rangeOption.ldb"},
 				"2": {"name": "punctuation.colon.ldb"}
 			},
 			"patterns": [
 				{"include": "#range"}
+			]
+		},
+		"targetOption": {
+			"name": "meta.options.ldb",
+			"begin": "(Target)(:)",
+			"end": ",|;",
+			"beginCaptures": { 
+				"1": {"name": "keyword.option.rangeOption.ldb"},
+				"2": {"name": "punctuation.colon.ldb"}
+			},
+			"patterns": [
+				{
+					"name": "constant.numeric.fileType.ldb",
+					"match": "[0-12](?!\\d)"
+				}
 			]
 		},
 
