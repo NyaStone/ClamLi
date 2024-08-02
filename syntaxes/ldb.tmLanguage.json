@@ -25,7 +25,9 @@
 			"patterns": [
 				{"include": "#engineOption"},
 				{"include": "#rangeOption"},
-				{"include": "#targetOption"}
+				{"include": "#targetOption"},
+				{"include": "#containerOption"},
+				{"include": "#intermediatesOption"}
 			]
 		},
 
@@ -58,7 +60,7 @@
 			"begin": "(Target)(:)",
 			"end": ",|;",
 			"beginCaptures": { 
-				"1": {"name": "keyword.option.rangeOption.ldb"},
+				"1": {"name": "keyword.option.targetOption.ldb"},
 				"2": {"name": "punctuation.colon.ldb"}
 			},
 			"patterns": [
@@ -72,6 +74,32 @@
 				}
 			]
 		},
+		"containerOption": {
+			"name": "meta.options.ldb",
+			"begin": "(Container)(:)",
+			"end": ",|;",
+			"beginCaptures": { 
+				"1": {"name": "keyword.option.containerOption.ldb"},
+				"2": {"name": "punctuation.colon.ldb"}
+			},
+			"patterns": [{"include": "#containerType"}]
+		},
+		"intermediatesOption": {
+			"name": "meta.options.ldb",
+			"begin": "(Intermediates)(:)",
+			"end": ",|;",
+			"beginCaptures": { 
+				"1": {"name": "keyword.option.intermediatesOption.ldb"},
+				"2": {"name": "punctuation.colon.ldb"}
+			},
+			"patterns": [
+				{"include": "#containerType"},
+				{
+					"name": "keyword.control.ldb",
+					"match": ">"
+				}
+			]
+		},
 
 
 		"range": {
@@ -81,6 +109,10 @@
 				"2": {"name": "punctuation.hyphen.ldb"},
 				"3": {"name": "constant.numeric.integer.ldb"}
 			}
+		},
+		"containerType": {
+			"name": "variable.other.containerType.ldb",
+			"match": "CL_TYPE_(?:7Z|7ZSFX|APM|ARJ|ARJSFX|AUTOIT|BINARY_DATA|BINHEX|BZ|CABSFX|CPIO_CRC|CPIO_NEWC|CPIO_ODC|CPIO_OLD|CRYPTFF|DMG|EGG|ELF|GIF|GPT|GRAPHICS|GZ|HTML_UTF16|HTML|HWP3|HWPOLE2|INTERNAL|ISHIELD_MSI|ISO9660|JAVA|JPEG|LNK|MACHO_UNIBIN|MACHO|MAIL|MBR|MHTML|MSCAB|MSCHM|MSEXE|MSOLE2|MSSZDD|NULSFT|OLD_TAR|ONENOTE|OOXML_HWP|OOXML_PPT|OOXML_WORD|OOXML_XL|PART_HFSPLUS|PDF|PNG|POSIX_TAR|PS|PYTHON_COMPILED|RAR|RARSFX|RIFF|RTF|SCRENC|SIS|SWF|TEXT_ASCII|TEXT_UTF16BE|TEXT_UTF16LE|TEXT_UTF8|TIFF|TNEF|UDF|UUENCODED|XAR|XDP|XML_HWP|XML_WORD|XML_XL|XZ|ZIP|ZIPSFX|ANY)"
 		}
 	},
 	"scopeName": "source.ldb"
