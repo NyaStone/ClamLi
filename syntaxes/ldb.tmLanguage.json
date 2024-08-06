@@ -6,8 +6,8 @@
 	"repository": {
 		"logicalSignature": {
 			"contentName": "entity.ldb.logicalSignature",
-			"begin": "([^;]*)(?=;)",
-			"end": "(?<=[^;][\\s\\r\\n]*)[\\r\\n]",
+			"begin": "([^;]*)(;)\\n*",
+			"end": "(?<=[^;]\\n)",
 			"beginCaptures": {
 				"1": {"name": "variable.other.ldb.signatureName"}
 			},
@@ -17,24 +17,35 @@
 		},
 		"targetDescriptionBlock": {
 			"contentName" : "meta.ldb.targetDescriptionBlock",
-			"begin": "(?<=\\G)(;)\\n*",
-			"end": "(?<=\\1[^;]*;)\\n*",
-			"beginCaptures": { 
-				"1": {"name": "punctuation.semicolon.ldb"}
-			},
+			"begin": "\\G",
+			"end": "(?<=[^,:;]\\n)",
 			"patterns": [
 				{"include": "#engineOption"},
 				{"include": "#rangeOption"},
 				{"include": "#targetOption"},
 				{"include": "#containerOption"},
-				{"include": "#intermediatesOption"}
+				{"include": "#intermediatesOption"},
+				{"include": "#logicalExpressionBlock"}
 			]
+		},
+		"logicalExpressionBlock": {
+			"contentName": "meta.ldb.logicalExpressionBlock",
+			"begin": ";",
+			"end": "(?<=[^,:;]\\n)",
+			"patterns": [
+				{"include": "#subSignaturesBlock"}
+			]
+		},
+		"subSignaturesBlock": {
+			"contentName": "meta.ldb.subSignaturesBlock",
+			"begin": ";",
+			"end": "(?<=[^,:;]\\n)"
 		},
 
 		"engineOption": {
 			"name": "meta.options.ldb",
 			"begin": "(?<=\\G)(Engine)(:)",
-			"end": ",|;",
+			"end": ",|(?=;)",
 			"beginCaptures": { 
 				"1": {"name": "keyword.option.engine.ldb"},
 				"2": {"name": "punctuation.colon.ldb"}
@@ -46,7 +57,7 @@
 		"rangeOption": {
 			"name": "meta.options.ldb",
 			"begin": "(FileSize|EntryPoint|NumberOfSections|IconGroup1|IconGroup2)(:)",
-			"end": ",|;",
+			"end": ",|(?=;)",
 			"beginCaptures": { 
 				"1": {"name": "keyword.option.rangeOption.ldb"},
 				"2": {"name": "punctuation.colon.ldb"}
@@ -58,7 +69,7 @@
 		"targetOption": {
 			"name": "meta.options.ldb",
 			"begin": "(Target)(:)",
-			"end": ",|;",
+			"end": ",|(?=;)",
 			"beginCaptures": { 
 				"1": {"name": "keyword.option.targetOption.ldb"},
 				"2": {"name": "punctuation.colon.ldb"}
@@ -77,7 +88,7 @@
 		"containerOption": {
 			"name": "meta.options.ldb",
 			"begin": "(Container)(:)",
-			"end": ",|;",
+			"end": ",|(?=;)",
 			"beginCaptures": { 
 				"1": {"name": "keyword.option.containerOption.ldb"},
 				"2": {"name": "punctuation.colon.ldb"}
@@ -87,7 +98,7 @@
 		"intermediatesOption": {
 			"name": "meta.options.ldb",
 			"begin": "(Intermediates)(:)",
-			"end": ",|;",
+			"end": ",|(?=;)",
 			"beginCaptures": { 
 				"1": {"name": "keyword.option.intermediatesOption.ldb"},
 				"2": {"name": "punctuation.colon.ldb"}
