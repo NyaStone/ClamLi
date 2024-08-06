@@ -33,13 +33,20 @@
 			"begin": ";",
 			"end": "(?<=[^,:;]\\n)",
 			"patterns": [
-				{"include": "#subSignaturesBlock"}
+				{"include": "#subSignaturesBlock"},
+				{
+					"match": "\\d+",
+					"name": "variable.other.subsignature.ldb"
+				}
 			]
 		},
 		"subSignaturesBlock": {
 			"contentName": "meta.ldb.subSignaturesBlock",
 			"begin": ";",
-			"end": "(?<=[^,:;]\\n)"
+			"end": "(?<=[^,:;]\\n)",
+			"patterns": [
+				{"include": "#subSignature"}
+			]
 		},
 
 		"engineOption": {
@@ -109,6 +116,17 @@
 					"name": "keyword.control.ldb",
 					"match": ">"
 				}
+			]
+		},
+
+		"subSignature": {
+			"contentName": "string.interpolated.subsignature.ldb",
+			"begin": "(?<=\\G|;|\\n)",
+			"end": "(::[iwfa]+)?(;|\\n)", 
+			"endCaptures": {
+				"1": {"name": "meta.substringModifier.ldb"}
+			},
+			"patterns": [
 			]
 		},
 
