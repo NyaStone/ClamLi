@@ -128,17 +128,26 @@
 
 		"subSignature": {
 			"contentName": "string.interpolated.subSignature.ldb",
-			"begin": "(?<=\\G|;|\\n)",
-			"end": "(::[iwfa]+)?(;|\\n)", 
-			"endCaptures": {
-				"1": {"name": "meta.substringModifier.ldb"}
-			},
+			"begin": "(?<=\\G|;)",
+			"end": "(?=;|$)", 
 			"patterns": [
 				{
 					"begin": "(?<=\\G)(?=[^:]*:[^:])",
-					"end": "(?=:)",
-					"contentName": "string.interpolated.subSignature.tobedetermined.ldb"
-				}
+					"end": "(:)",
+					"name": "keyword.other.subSignature.entryOffset.ldb"
+				},
+				{
+					"name": "keyword.other.subSignature.modifier.ldb",
+					"begin": "(::)",
+					"end": "(?<=\\1.*)(?=;|$)",
+					"patterns": [
+						{
+							"match": "[^ifwa]",
+							"name": "invalid.illegal.subSignature.modifier.ldb"
+						}
+					]
+				},
+				{ "include": "#contentBasedSignature"}
 			]
 		},
 
@@ -147,13 +156,42 @@
 			"match": "(\\d+)(-)(\\d+)",
 			"captures": {
 				"1": {"name": "constant.numeric.integer.ldb"},
-				"2": {"name": "punctuation.hyphen.ldb"},
+				"2": {"name": "keyword.operator.range.ldb"},
 				"3": {"name": "constant.numeric.integer.ldb"}
 			}
 		},
 		"containerType": {
 			"name": "variable.other.containerType.ldb",
 			"match": "CL_TYPE_(?:7Z|7ZSFX|APM|ARJ|ARJSFX|AUTOIT|BINARY_DATA|BINHEX|BZ|CABSFX|CPIO_CRC|CPIO_NEWC|CPIO_ODC|CPIO_OLD|CRYPTFF|DMG|EGG|ELF|GIF|GPT|GRAPHICS|GZ|HTML_UTF16|HTML|HWP3|HWPOLE2|INTERNAL|ISHIELD_MSI|ISO9660|JAVA|JPEG|LNK|MACHO_UNIBIN|MACHO|MAIL|MBR|MHTML|MSCAB|MSCHM|MSEXE|MSOLE2|MSSZDD|NULSFT|OLD_TAR|ONENOTE|OOXML_HWP|OOXML_PPT|OOXML_WORD|OOXML_XL|PART_HFSPLUS|PDF|PNG|POSIX_TAR|PS|PYTHON_COMPILED|RAR|RARSFX|RIFF|RTF|SCRENC|SIS|SWF|TEXT_ASCII|TEXT_UTF16BE|TEXT_UTF16LE|TEXT_UTF8|TIFF|TNEF|UDF|UUENCODED|XAR|XDP|XML_HWP|XML_WORD|XML_XL|XZ|ZIP|ZIPSFX|ANY)"
+		},
+		"contentBasedSignature": {
+			"begin": "(?<=;(.*:)?)",
+			"end": "(?=$|:|;)",
+			"patterns": [
+				{"include": "#matchRangeOfBytes"}
+			]
+		},
+		"matchRangeOfBytes": {
+			"begin": "({)",
+			"end": "(?<=\\1[^}]*)(})",
+			"beginCaptures": {
+				"1": {"name": "keyword.control.ldb"}
+			},
+			"endCaptures": {
+				"1": {"name": "keyword.control.ldb"}
+			},
+			"patterns": [
+				{"match": "[^[0-9]-]", "name": "invalid.illegal.subSignature.matchNBytesRange.ldb"},
+				{"match": "(?<=-.*)-", "name": "invalid.illegal.subSignature.matchNBytesRange.ldb"},
+				{
+					"match": "([0-9]*)(-)?([0-9])*", 
+					"captures": {
+						"1": {"name": "constant.numeric.integer.ldb"},
+						"2": {"name": "keyword.operator.range.ldb"},
+						"3": {"name": "constant.numeric.integer.ldb"}
+					}
+				}
+			]
 		}
 	},
 	"scopeName": "source.ldb"
