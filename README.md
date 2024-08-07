@@ -21,5 +21,5 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-Splitting a signature rule on multiple lines not suported
+Not released yet
 
