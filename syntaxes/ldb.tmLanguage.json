@@ -192,7 +192,8 @@
 				{"include": "#alternateStrings"},
 				{"include": "#byteWildCard"},
 				{"include": "#nimbleWildCard"},
-				{"include": "#illegalCharacter"}
+				{"include": "#illegalCharacter"},
+				{"include": "#incompleteByte"}
 			]
 		},
 		"recursiveContentBasedSignature": {
@@ -213,12 +214,17 @@
 				{"include": "#alternateStrings"},
 				{"include": "#byteWildCard"},
 				{"include": "#nimbleWildCard"},
-				{"include": "#illegalCharacter"}
+				{"include": "#illegalCharacter"},
+				{"include": "#incompleteByte"}
 			]
 		},
 		"illegalCharacter": {
 			"match": "[^[0-9][a-f]\\?\\*]",
 			"name": "invalid.illegal.subSignature.character.ldb"
+		},
+		"incompleteByte": {
+			"match": "(?<=[^[0-9][a-f]\\?](?:[[0-9][a-f]\\?]{2})*)[[0-9][a-f]\\?](?=[^[0-9][a-f]\\?]|$)",
+			"name": "invalid.illegal.subSignature.incompleteByte.ldb"
 		},
 		"byteWildCard": {
 			"match": "\\*",
