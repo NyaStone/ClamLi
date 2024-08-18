@@ -29,7 +29,7 @@
 				"1":{"name": "keyword.control.ldb"}
 			},
 			"patterns": [
-				{"include": "#engineOption"},
+				{"include": "#engineOptionException"},
 				{"include": "#rangeOption"},
 				{"include": "#targetOption"},
 				{"include": "#containerOption"},
@@ -56,22 +56,13 @@
 			]
 		},
 
-		"engineOption": {
-			"name": "meta.options.ldb",
-			"begin": "(?<=\\G)(Engine)(:)",
-			"end": ",|(?=;|$)",
-			"beginCaptures": { 
-				"1": {"name": "keyword.option.engine.ldb"},
-				"2": {"name": "punctuation.colon.ldb"}
-			},
-			"patterns": [
-				{"include": "#range"},
-				{"include": "#incompleteRange"}
-			]
+		"engineOptionException": {
+			"name": "invalid.illegal.options.engineException.ldb",
+			"match": "(?<!\\G)(Engine)(:)"
 		},
 		"rangeOption": {
 			"name": "meta.options.ldb",
-			"begin": "(FileSize|EntryPoint|NumberOfSections|IconGroup1|IconGroup2)(:)",
+			"begin": "(Engine|FileSize|EntryPoint|NumberOfSections|IconGroup1|IconGroup2)(:)",
 			"end": ",|(?=;|$)",
 			"beginCaptures": { 
 				"1": {"name": "keyword.option.rangeOption.ldb"},
