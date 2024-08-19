@@ -41,10 +41,7 @@
 			"begin": "(?<!;[^;]*;[^;]*)(;)(?!$)",
 			"end": "(?<=\\1[^;]+)(?=;|$)",
 			"patterns": [
-				{
-					"match": "\\d+",
-					"name": "variable.other.subsignature.ldb"
-				}
+				{"include": "#subExpression"}
 			]
 		},
 		"subSignaturesBlock": {
@@ -121,12 +118,11 @@
 		},
 
 		"subSignature": {
-			"contentName": "string.interpolated.subSignature.ldb",
 			"begin": "(?<=\\G|;)",
 			"end": "(?=;|$)", 
 			"patterns": [
 				{
-					"begin": "(?<=\\G)(?=[^:]*:[^:])",
+					"begin": "(?<=\\G)(?=[^:;]*:[^:])",
 					"end": "(:)",
 					"name": "keyword.other.subSignature.entryOffset.ldb"
 				},
@@ -141,10 +137,14 @@
 						}
 					]
 				},
+				{ "include": "#prceSignature"},
 				{ "include": "#contentBasedSignature"}
 			]
 		},
-
+		"subExpression": {
+			"match": "\\d+",
+			"name": "variable.other.subsignature.ldb"
+		},
 
 		"range": {
 			"match": "([0-9]+)(-)([0-9]+)",
@@ -168,16 +168,17 @@
 		"contentBasedSignature": {
 			"begin": "(?<=;(.*:)?)",
 			"end": "(?=$|:|;)",
+			"contentName": "string.interpolated.contentBasedSignature.ldb",
 			"patterns": [
 				{"include": "#matchRangeOfBytes"},
 				{
 					"match": "{(?![^}]*})",
-					"name": "invalid.illegal.subSignature.openRangeOperator.ldb"
+					"name": "invalid.illegal.contentBasedSignature.openRangeOperator.ldb"
 				},
 				{"include": "#noSplitRangeOfBytes"},
 				{
 					"match": "\\[(?![^\\]]*\\])",
-					"name": "invalid.illegal.subSignature.openRangeOperator.ldb"
+					"name": "invalid.illegal.contentBasedSignature.openRangeOperator.ldb"
 				},
 				{"include": "#characterClass"},
 				{"include": "#alternateStrings"},
@@ -207,6 +208,44 @@
 				{"include": "#nimbleWildCard"},
 				{"include": "#illegalCharacter"},
 				{"include": "#incompleteByte"}
+			]
+		},
+		"prceSignature": {
+			"begin": "(?<=;(.*:)?)(?=[^:;]*/.*/[^:;]*(;|$))",
+			"end": "(?=$|:|;)",
+			"contentName": "meta.ldb.prceSignature",
+			"patterns": [
+				{
+					"begin": "\\G",
+					"end": "(/)",
+					"endCaptures": {
+						"1": {"name": "keyword.control.prce.ldb"}
+					},
+					"patterns": [
+						{"include": "#subExpression"}
+					]
+				},
+				{
+					"begin": "(/)",
+					"end": "(?=$|:|;)",
+					"beginCaptures": {
+						"1": {"name": "keyword.control.prce.ldb"}
+					},
+					"patterns": [
+						{
+							"match": "[greismxAEU]",
+							"name": "keyword.flag.prceSignature.ldb"
+						},
+						{
+							"match": "[^greismxAEU]",
+							"name": "invalid.illegal.flag.prceSignature.ldb"
+						}
+					]
+				},
+				{
+					"match": ".",
+					"name": "string.regex.ldb"
+				}
 			]
 		},
 		"illegalCharacter": {
