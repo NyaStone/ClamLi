@@ -137,6 +137,7 @@
 						}
 					]
 				},
+				{ "include": "#macroSignature"},
 				{ "include": "#prceSignature"},
 				{ "include": "#contentBasedSignature"}
 			]
@@ -208,6 +209,44 @@
 				{"include": "#nimbleWildCard"},
 				{"include": "#illegalCharacter"},
 				{"include": "#incompleteByte"}
+			]
+		},
+		"macroSignature": {
+			"begin": "(?<=;)(\\$)(?=[^:]*(;|$))",
+			"end": "(\\$)?(?=$|;)",
+			"beginCaptures": {
+				"1": {"name": "keyword.control.macro.ldb"}
+			},
+			"endCaptures": {
+				"1": {"name": "keyword.control.macro.ldb"}
+			},
+			"patterns": [
+				{
+					"name": "invalid.illegal.macroSignature.missingOffsetRange.ldb",
+					"begin": "(?<=\\G)[^{]",
+					"end": "(?=$|;)"
+				},
+				{
+					"begin": "(?<=\\G)({)",
+					"end": "(})|(?=($|;))",
+					"beginCaptures": {
+						"1": {"name": "keyword.control.ldb"}
+					},
+					"endCaptures": {
+						"1": {"name": "keyword.control.ldb"}
+					},
+					"patterns": [
+						{ "include": "#range"}
+					]
+				},
+				{ 
+					"match": "[^\\d]+",
+					"name": "invalid.illegal.macroSignature.invalidId.ldb"
+				},
+				{
+					"match": "\\d*(?=\\$)",
+					"name": "variable.other.macroId.ldb"
+				}
 			]
 		},
 		"prceSignature": {
