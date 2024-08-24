@@ -139,12 +139,13 @@
 				},
 				{ "include": "#macroSignature"},
 				{ "include": "#prceSignature"},
+				{ "include": "#byteCompareSignature"},
 				{ "include": "#contentBasedSignature"}
 			]
 		},
 		"subExpression": {
 			"match": "\\d+",
-			"name": "variable.other.subsignature.ldb"
+			"name": "variable.other.subSignature.ldb"
 		},
 
 		"range": {
@@ -246,6 +247,88 @@
 				{
 					"match": "\\d*(?=\\$)",
 					"name": "variable.other.macroId.ldb"
+				}
+			]
+		},
+		"byteCompareSignature": {
+			"begin": "(?<=\\G)(?=[0-9]*\\((>>|<<)[^;\\)]*\\))",
+			"end": "(?=$|:|;)",
+			"contentName": "meta.ldb.byteCompareSignature",
+			"patterns": [
+				{
+					"begin": "(?<=\\G)",
+					"end": "(>>|<<)",
+					"endCaptures": {
+						"1": {"name": "keyword.offsetOperator.ldb"}
+					},
+					"patterns": [
+						{
+							"match": "\\d",
+							"name": "variable.other.subSignatureId.ldb"
+						},
+						{
+							"match": "[^\\d]",
+							"name": "invalid.illegal.subSignatureId.ldb"
+						}
+					]					
+				},
+				{
+					"begin": "(?<=>>|<<)",
+					"end": "(?=#|\\))",
+					"beginCaptures": {
+						"1": {"name": "keyword.option.compareSignatureCaptureOption.ldb"}
+					},
+					"patterns": [
+						{
+							"match": "[[0-9][a-f]]",
+							"name": "constant.numeric.byteCompareSignature.offset.ldb"
+						},
+						{
+							"match": "[^[0-9][a-f]]",
+							"name": "invalid.illegal.byteCompareSignature.illegalOffset.ldb"
+						}
+					]	
+				},
+				{
+					"begin": "(#)(?=[^\\)]*#)",
+					"end": "(#)",
+					"beginCaptures": {
+						"1": {"name": "keyword.control.pound.ldb"}
+					},
+					"endCaptures": {
+						"1": {"name": "keyword.control.pound.ldb"}
+					},
+					"patterns": [
+						{
+							"match": "(?<=\\G)([hdai]?[lb]?e?)",
+							"name": "keyword.option.byteCompareOption.ldb"
+						},
+						{
+							"match": "[[0-9][a-f]]",
+							"name": "constant.numeric.byteCompareSignature.numBytes.ldb"
+						},
+						{
+							"match": "[^[0-9][a-f]#]",
+							"name": "invalid.illegal.byteCompareSignature.illegalNumBytes.ldb"
+						}
+					]
+				},
+				{
+					"begin": "(<|>|=)(?=[^,\\)]+)",
+					"end": "(,)|(?=\\))",
+					"beginCaptures": {
+						"1": {"name": "keyword.compareOperator.ldb"}
+					},
+					"patterns": [
+						{
+							"match": "[[0-9][a-f]]",
+							"name": "constant.numeric.byteCompareSignature.value.ldb"
+						},
+						{
+							"match": "[^[0-9][a-f]#]",
+							"name": "invalid.illegal.byteCompareSignature.illegalValue.ldb"
+						}
+					]
 				}
 			]
 		},
