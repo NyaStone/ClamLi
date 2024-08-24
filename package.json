@@ -3,6 +3,7 @@
   "displayName": "ClamLi",
   "description": "VsCode extention aiming at making ClamAV rules easier.",
   "version": "0.0.1",
+  "publisher": "someone",
   "engines": {
     "vscode": "^1.91.0"
   },
