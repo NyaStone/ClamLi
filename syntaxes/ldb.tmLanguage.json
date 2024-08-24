@@ -275,9 +275,6 @@
 				{
 					"begin": "(?<=>>|<<)",
 					"end": "(?=#|\\))",
-					"beginCaptures": {
-						"1": {"name": "keyword.option.compareSignatureCaptureOption.ldb"}
-					},
 					"patterns": [
 						{
 							"match": "[[0-9][a-f]]",
@@ -290,8 +287,8 @@
 					]	
 				},
 				{
-					"begin": "(#)(?=[^\\)]*#)",
-					"end": "(#)",
+					"begin": "(?<=(?:<<|>>)[^#]*)(#)",
+					"end": "(#)|(?=\\))",
 					"beginCaptures": {
 						"1": {"name": "keyword.control.pound.ldb"}
 					},
