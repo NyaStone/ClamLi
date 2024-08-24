@@ -1,24 +1,474 @@
 {
 	"name": "Logical signature",
 	"patterns": [
-		{
-			"include": "#ruleNames"
-		},
-		{
-			"include": "#semiColons"
-		}
+		{"include": "#logicalSignature"}
 	],
 	"repository": {
-		"ruleNames": {
-			"patterns": [{
-				"name": "variable.other.ldb",
-				"match": "^(\\d|\\w|_)+"
-			}]
+		"logicalSignature": {
+			"contentName": "entity.ldb.logicalSignature",
+			"begin": "(?<=^)(?!$)",
+			"end": "(?=$)",
+			"beginCaptures": {
+				"1": {"name": "variable.other.ldb.signatureName"}
+			},
+			"patterns": [
+				{
+					"match": "(?<=\\G)[^;]+(?=;)",
+					"name": "variable.other.ldb.signatureName"
+				},
+				{"include": "#targetDescriptionBlock"},
+				{"include": "#logicalExpressionBlock"},
+				{"include": "#subSignaturesBlock"}
+			]
 		},
-		"semiColons": {
-			"name": "keyword.other.ldb",
-			"match": ";"
+		"targetDescriptionBlock": {
+			"contentName" : "meta.ldb.targetDescriptionBlock",
+			"begin": "(?<!;[^;]*)(;)(?!$)",
+			"end": "(?<=\\1[^;\\n]+)(?=;|$)",
+			"beginCaptures": {
+				"1":{"name": "keyword.control.ldb"}
+			},
+			"patterns": [
+				{"include": "#engineOptionException"},
+				{"include": "#rangeOption"},
+				{"include": "#targetOption"},
+				{"include": "#containerOption"},
+				{"include": "#intermediatesOption"}
+			]
+		},
+		"logicalExpressionBlock": {
+			"contentName": "meta.ldb.logicalExpressionBlock",
+			"begin": "(?<!;[^;]*;[^;]*)(;)(?!$)",
+			"end": "(?<=\\1[^;]+)(?=;|$)",
+			"patterns": [
+				{"include": "#subExpression"}
+			]
+		},
+		"subSignaturesBlock": {
+			"contentName": "meta.ldb.subSignaturesBlock",
+			"begin": "(?<!;[^;]*;[^;]*;[^;]*)(;)(?!$)",
+			"end": "(?=$)",
+			"patterns": [
+				{"include": "#subSignature"}
+			]
+		},
+
+		"engineOptionException": {
+			"name": "invalid.illegal.options.engineException.ldb",
+			"match": "(?<!\\G)(Engine)(:)"
+		},
+		"rangeOption": {
+			"name": "meta.options.ldb",
+			"begin": "(Engine|FileSize|EntryPoint|NumberOfSections|IconGroup1|IconGroup2)(:)",
+			"end": ",|(?=;|$)",
+			"beginCaptures": { 
+				"1": {"name": "keyword.option.rangeOption.ldb"},
+				"2": {"name": "punctuation.colon.ldb"}
+			},
+			"patterns": [
+				{"include": "#range"},
+				{"include": "#incompleteRange"}
+
+			]
+		},
+		"targetOption": {
+			"name": "meta.options.ldb",
+			"begin": "(Target)(:)",
+			"end": ",|(?=;|$)",
+			"beginCaptures": { 
+				"1": {"name": "keyword.option.targetOption.ldb"},
+				"2": {"name": "punctuation.colon.ldb"}
+			},
+			"patterns": [
+				{
+					"name": "constant.numeric.fileType.ldb",
+					"match": "(?<!\\d)\\d(?!\\d)"
+				},
+				{
+					"name": "constant.numeric.fileType.ldb",
+					"match": "(?<!\\d)1[012](?!\\d)"
+				}
+			]
+		},
+		"containerOption": {
+			"name": "meta.options.ldb",
+			"begin": "(Container)(:)",
+			"end": ",|(?=;|$)",
+			"beginCaptures": { 
+				"1": {"name": "keyword.option.containerOption.ldb"},
+				"2": {"name": "punctuation.colon.ldb"}
+			},
+			"patterns": [{"include": "#containerType"}]
+		},
+		"intermediatesOption": {
+			"name": "meta.options.ldb",
+			"begin": "(Intermediates)(:)",
+			"end": ",|(?=;|$)",
+			"beginCaptures": { 
+				"1": {"name": "keyword.option.intermediatesOption.ldb"},
+				"2": {"name": "punctuation.colon.ldb"}
+			},
+			"patterns": [
+				{"include": "#containerType"},
+				{
+					"name": "keyword.control.ldb",
+					"match": ">"
+				}
+			]
+		},
+
+		"subSignature": {
+			"begin": "(?<=\\G|;)",
+			"end": "(?=;|$)", 
+			"patterns": [
+				{
+					"begin": "(?<=\\G)(?=[^:;]*:[^:])",
+					"end": "(:)",
+					"name": "keyword.other.subSignature.entryOffset.ldb"
+				},
+				{
+					"name": "keyword.other.subSignature.modifier.ldb",
+					"begin": "(::)",
+					"end": "(?<=\\1.*)(?=;|$)",
+					"patterns": [
+						{
+							"match": "[^ifwa]",
+							"name": "invalid.illegal.subSignature.modifier.ldb"
+						}
+					]
+				},
+				{ "include": "#macroSignature"},
+				{ "include": "#prceSignature"},
+				{ "include": "#byteCompareSignature"},
+				{ "include": "#fuzzyHashSignature"},
+				{ "include": "#contentBasedSignature"}
+			]
+		},
+		"subExpression": {
+			"match": "\\d+",
+			"name": "variable.other.subSignature.ldb"
+		},
+
+		"range": {
+			"match": "([0-9]+)(-)([0-9]+)",
+			"captures": {
+				"1": {"name": "constant.numeric.integer.ldb"},
+				"2": {"name": "keyword.operator.range.ldb"},
+				"3": {"name": "constant.numeric.integer.ldb"}
+			}
+		},
+		"incompleteRange": {
+			"match": "(?![0-9]+-[0-9]+).",
+			"name": "invalid.illegal.range.incomplete.ldb"
+		},
+		"containerType": {
+			"name": "variable.other.containerType.ldb",
+			"match": "CL_TYPE_(?:7Z|7ZSFX|APM|ARJ|ARJSFX|AUTOIT|BINARY_DATA|BINHEX|BZ|CABSFX|CPIO_CRC|CPIO_NEWC|CPIO_ODC|CPIO_OLD|CRYPTFF|DMG|EGG|ELF|GIF|GPT|GRAPHICS|GZ|HTML_UTF16|HTML|HWP3|HWPOLE2|INTERNAL|ISHIELD_MSI|ISO9660|JAVA|JPEG|LNK|MACHO_UNIBIN|MACHO|MAIL|MBR|MHTML|MSCAB|MSCHM|MSEXE|MSOLE2|MSSZDD|NULSFT|OLD_TAR|ONENOTE|OOXML_HWP|OOXML_PPT|OOXML_WORD|OOXML_XL|PART_HFSPLUS|PDF|PNG|POSIX_TAR|PS|PYTHON_COMPILED|RAR|RARSFX|RIFF|RTF|SCRENC|SIS|SWF|TEXT_ASCII|TEXT_UTF16BE|TEXT_UTF16LE|TEXT_UTF8|TIFF|TNEF|UDF|UUENCODED|XAR|XDP|XML_HWP|XML_WORD|XML_XL|XZ|ZIP|ZIPSFX|ANY)"
+		},
+
+
+
+		"contentBasedSignature": {
+			"begin": "(?<=;(.*:)?)",
+			"end": "(?=$|:|;)",
+			"contentName": "string.interpolated.contentBasedSignature.ldb",
+			"patterns": [
+				{"include": "#matchRangeOfBytes"},
+				{
+					"match": "{(?![^}]*})",
+					"name": "invalid.illegal.contentBasedSignature.openRangeOperator.ldb"
+				},
+				{"include": "#noSplitRangeOfBytes"},
+				{
+					"match": "\\[(?![^\\]]*\\])",
+					"name": "invalid.illegal.contentBasedSignature.openRangeOperator.ldb"
+				},
+				{"include": "#characterClass"},
+				{"include": "#alternateStrings"},
+				{"include": "#byteWildCard"},
+				{"include": "#nimbleWildCard"},
+				{"include": "#illegalCharacter"},
+				{"include": "#incompleteByte"}
+			]
+		},
+		"recursiveContentBasedSignature": {
+			"begin": "(?<=[\\(\\|])",
+			"end": "(?=$|\\)|\\|)",
+			"patterns": [
+				{"include": "#matchRangeOfBytes"},
+				{
+					"match": "{(?![^}]*})",
+					"name": "invalid.illegal.subSignature.openRangeOperator.ldb"
+				},
+				{"include": "#noSplitRangeOfBytes"},
+				{
+					"match": "\\[(?![^\\]]*\\])",
+					"name": "invalid.illegal.subSignature.openRangeOperator.ldb"
+				},
+				{"include": "#characterClass"},
+				{"include": "#alternateStrings"},
+				{"include": "#byteWildCard"},
+				{"include": "#nimbleWildCard"},
+				{"include": "#illegalCharacter"},
+				{"include": "#incompleteByte"}
+			]
+		},
+		"macroSignature": {
+			"begin": "(?<=;)(\\$)(?=[^:]*(;|$))",
+			"end": "(\\$)?(?=$|;)",
+			"beginCaptures": {
+				"1": {"name": "keyword.control.macro.ldb"}
+			},
+			"endCaptures": {
+				"1": {"name": "keyword.control.macro.ldb"}
+			},
+			"patterns": [
+				{
+					"name": "invalid.illegal.macroSignature.missingOffsetRange.ldb",
+					"begin": "(?<=\\G)[^{]",
+					"end": "(?=$|;)"
+				},
+				{
+					"begin": "(?<=\\G)({)",
+					"end": "(})|(?=($|;))",
+					"beginCaptures": {
+						"1": {"name": "keyword.control.ldb"}
+					},
+					"endCaptures": {
+						"1": {"name": "keyword.control.ldb"}
+					},
+					"patterns": [
+						{ "include": "#range"}
+					]
+				},
+				{ 
+					"match": "[^\\d]+",
+					"name": "invalid.illegal.macroSignature.invalidId.ldb"
+				},
+				{
+					"match": "\\d*(?=\\$)",
+					"name": "variable.other.macroId.ldb"
+				}
+			]
+		},
+		"byteCompareSignature": {
+			"begin": "(?<=\\G)(?=[0-9]*\\((>>|<<)[^;\\)]*\\))",
+			"end": "(?=$|:|;)",
+			"contentName": "meta.ldb.byteCompareSignature",
+			"patterns": [
+				{
+					"begin": "(?<=\\G)",
+					"end": "(>>|<<)",
+					"endCaptures": {
+						"1": {"name": "keyword.offsetOperator.ldb"}
+					},
+					"patterns": [
+						{
+							"match": "\\d",
+							"name": "variable.other.subSignatureId.ldb"
+						},
+						{
+							"match": "[^\\d]",
+							"name": "invalid.illegal.subSignatureId.ldb"
+						}
+					]					
+				},
+				{
+					"begin": "(?<=>>|<<)",
+					"end": "(?=#|\\))",
+					"patterns": [
+						{
+							"match": "[[0-9][a-f]]",
+							"name": "constant.numeric.byteCompareSignature.offset.ldb"
+						},
+						{
+							"match": "[^[0-9][a-f]]",
+							"name": "invalid.illegal.byteCompareSignature.illegalOffset.ldb"
+						}
+					]	
+				},
+				{
+					"begin": "(?<=(?:<<|>>)[^#]*)(#)",
+					"end": "(#)|(?=\\))",
+					"beginCaptures": {
+						"1": {"name": "keyword.control.pound.ldb"}
+					},
+					"endCaptures": {
+						"1": {"name": "keyword.control.pound.ldb"}
+					},
+					"patterns": [
+						{
+							"match": "(?<=\\G)([hdai]?[lb]?e?)",
+							"name": "keyword.option.byteCompareOption.ldb"
+						},
+						{
+							"match": "[[0-9][a-f]]",
+							"name": "constant.numeric.byteCompareSignature.numBytes.ldb"
+						},
+						{
+							"match": "[^[0-9][a-f]#]",
+							"name": "invalid.illegal.byteCompareSignature.illegalNumBytes.ldb"
+						}
+					]
+				},
+				{
+					"begin": "(<|>|=)(?=[^,\\)]+)",
+					"end": "(,)|(?=\\))",
+					"beginCaptures": {
+						"1": {"name": "keyword.compareOperator.ldb"}
+					},
+					"patterns": [
+						{
+							"match": "[[0-9][a-f]]",
+							"name": "constant.numeric.byteCompareSignature.value.ldb"
+						},
+						{
+							"match": "[^[0-9][a-f]#]",
+							"name": "invalid.illegal.byteCompareSignature.illegalValue.ldb"
+						}
+					]
+				}
+			]
+		},
+		"prceSignature": {
+			"begin": "(?<=;(.*:)?)(?=[^:;]*/.*/[^:;]*(;|$))",
+			"end": "(?=$|:|;)",
+			"contentName": "meta.ldb.prceSignature",
+			"patterns": [
+				{
+					"begin": "\\G",
+					"end": "(/)",
+					"endCaptures": {
+						"1": {"name": "keyword.control.prce.ldb"}
+					},
+					"patterns": [
+						{"include": "#subExpression"}
+					]
+				},
+				{
+					"begin": "(/)",
+					"end": "(?=$|:|;)",
+					"beginCaptures": {
+						"1": {"name": "keyword.control.prce.ldb"}
+					},
+					"patterns": [
+						{
+							"match": "[greismxAEU]",
+							"name": "keyword.flag.prceSignature.ldb"
+						},
+						{
+							"match": "[^greismxAEU]",
+							"name": "invalid.illegal.flag.prceSignature.ldb"
+						}
+					]
+				},
+				{
+					"match": ".",
+					"name": "string.regex.ldb"
+				}
+			]
+		},
+		"fuzzyHashSignature": {
+			"begin": "(?<=\\G)(fuzzy_img)(#)",
+			"end": "(?=;|$)",
+			"beginCaptures": {
+				"1": {"name": "keyword.fuzzyImageHash.ldb"},
+				"2": {"name": "keyword.control.pound.ldb"}
+			},
+			"patterns": [
+				{
+					"match": "(?<=\\G)[[0-9][a-f]]*",
+					"name": "string.interpolated.hash.ldb"
+				},
+				{
+					"match": "(#)([0-9]*)",
+					"captures": {
+						"1": {"name": "keyword.control.pound.ldb"},
+						"2": {"name": "constant.numeric.integer.distance.ldb"}
+					}
+				},
+				{
+					"match": "[^[0-9][a-f]#]",
+					"name": "invalid.illegal.fuzzyHashCharacter.ldb"
+				}
+			]
+		},
+		"illegalCharacter": {
+			"match": "[^[0-9][a-f]\\?\\*]",
+			"name": "invalid.illegal.subSignature.character.ldb"
+		},
+		"incompleteByte": {
+			"match": "(?<=[^[0-9][a-f]\\?](?:[[0-9][a-f]\\?]{2})*)[[0-9][a-f]\\?](?=[^[0-9][a-f]\\?]|$)",
+			"name": "invalid.illegal.subSignature.incompleteByte.ldb"
+		},
+		"byteWildCard": {
+			"match": "\\*",
+			"name": "keyword.wildcard.byte.ldb"
+		},
+		"nimbleWildCard": {
+			"match": "\\?",
+			"name": "variable.wildcard.byte.ldb"
+		},
+		"matchRangeOfBytes": {
+			"begin": "({)(?=[^}]*})",
+			"end": "(?<=\\1[^}]*)(})",
+			"beginCaptures": {
+				"1": {"name": "keyword.control.ldb"}
+			},
+			"endCaptures": {
+				"1": {"name": "keyword.control.ldb"}
+			},
+			"patterns": [
+				{"match": "[^[0-9]-]", "name": "invalid.illegal.subSignature.matchNBytesRange.ldb"},
+				{"match": "(?<=-.*)-", "name": "invalid.illegal.subSignature.matchNBytesRange.ldb"},
+				{
+					"match": "([0-9]*)(-)?([0-9])*", 
+					"captures": {
+						"1": {"name": "constant.numeric.integer.ldb"},
+						"2": {"name": "keyword.operator.range.ldb"},
+						"3": {"name": "constant.numeric.integer.ldb"}
+					}
+				}
+			]
+		},
+		"noSplitRangeOfBytes": {
+			"begin": "(\\[)(?=[^\\]]*\\])",
+			"end": "(?<=\\1[^\\]]*)(\\])",
+			"beginCaptures": {
+				"1": {"name": "keyword.control.ldb"}
+			},
+			"endCaptures": {
+				"1": {"name": "keyword.control.ldb"}
+			},
+			"patterns": [
+				{"include": "#range"},
+				{"include": "#incompleteRange"},
+				{"match": "[^[0-9]-]", "name": "invalid.illegal.subSignature.matchNBytesRange.ldb"},
+				{"match": "(?<=-.*)-", "name": "invalid.illegal.subSignature.matchNBytesRange.ldb"}
+			]
+		},
+		"characterClass": {
+			"match": "\\([BLW]\\)",
+			"name": "keyword.other.subSignature.characterClass.ldb"
+		},
+		"alternateStrings": {
+			"begin": "(\\()",
+			"end": "(\\))|(?=$)",
+			"beginCaptures": {
+				"1": {"name": "keyword.control.parenthesis.ldb"}
+			},
+			"endCaptures": {
+				"1": {"name": "keyword.control.parenthesis.ldb"}
+			},
+			"patterns": [
+				{"include": "#recursiveContentBasedSignature"},
+				{
+					"match": "\\|",
+					"name": "keyword.operator.or.ldb"
+				}
+			]
 		}
+
 	},
 	"scopeName": "source.ldb"
 }
