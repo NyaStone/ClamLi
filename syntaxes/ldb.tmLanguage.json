@@ -140,6 +140,7 @@
 				{ "include": "#macroSignature"},
 				{ "include": "#prceSignature"},
 				{ "include": "#byteCompareSignature"},
+				{ "include": "#fuzzyHashSignature"},
 				{ "include": "#contentBasedSignature"}
 			]
 		},
@@ -364,6 +365,31 @@
 				{
 					"match": ".",
 					"name": "string.regex.ldb"
+				}
+			]
+		},
+		"fuzzyHashSignature": {
+			"begin": "(?<=\\G)(fuzzy_img)(#)",
+			"end": "(?=;|$)",
+			"beginCaptures": {
+				"1": {"name": "keyword.fuzzyImageHash.ldb"},
+				"2": {"name": "keyword.control.pound.ldb"}
+			},
+			"patterns": [
+				{
+					"match": "(?<=\\G)[[0-9][a-f]]*",
+					"name": "string.interpolated.hash.ldb"
+				},
+				{
+					"match": "(#)([0-9]*)",
+					"captures": {
+						"1": {"name": "keyword.control.pound.ldb"},
+						"2": {"name": "constant.numeric.integer.distance.ldb"}
+					}
+				},
+				{
+					"match": "[^[0-9][a-f]#]",
+					"name": "invalid.illegal.fuzzyHashCharacter.ldb"
 				}
 			]
 		},
