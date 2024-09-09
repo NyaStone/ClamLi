@@ -1,0 +1,148 @@
+{
+    "name": "Extended Signatures",
+    "patterns": [
+		{"include": "#extendedSignature"}
+    ],
+    "repository": {
+        "extendedSignature": {
+            "contentName": "entity.extendedSignature.ndb",
+            "begin": "(?<=^)(?!$)",
+			"end": "(?=$)",
+            "patterns": [
+                {
+                    "begin": "(?<=\\G)[^:]+(?=:)",
+                    "end": "(?=$|:)",
+                    "name": "variable.other.threatName.ndb"
+                },
+                {"include": "#target"},
+                {"include": "#offset"}
+            ]
+        },
+        "target": {
+            "begin": "(?<!:[^:]*)(:)",
+            "end": "(?=$|:)",
+            "beginCaptures": {
+                "1": {"name": "keyword.control.ndb"}
+            },
+            "patterns": [
+                {
+                    "name": "constant.numeric.fileType.ndb",
+                    "match": "(?<!\\d)\\d(?!\\d)"
+                },
+                {
+                    "name": "constant.numeric.fileType.ndb",
+                    "match": "(?<!\\d)1[012](?!\\d)"
+                },
+                {
+                    "name": "invalid.illegal.invalidTargetFileFormat.ndb",
+                    "match": "."
+                }
+            ]
+        },
+        "offset": {
+            "begin": "(?<!:[^:]*:[^:]*)(:)",
+            "end": "(?=$|:)",
+            "beginCaptures": {
+                "1": {"name": "keyword.control.ndb"}
+            },
+            "patterns": [
+                {
+                    "name": "keyword.option.entryOffset.ndb",
+                    "match": "(?<=\\G)EP[\\+\\-]"
+                },
+                {
+                    "name": "keyword.option.endOffset.ndb",
+                    "match": "(?<=\\G)EOF\\-"
+                },
+                {
+                    "name": "keyword.option.lastSectionOffset.ndb",
+                    "match": "(?<=\\G)SL\\+"
+                },
+                {
+                    "begin": "(?<=\\G)(SE)",
+                    "end": "(?=$|:)",
+                    "beginCaptures": {
+                        "1": {"name": "keyword.option.entireSectionOffset.ndb"}
+                    },
+                    "patterns": [
+                        {
+                            "name": "variable.other.sectionOffset.ndb",
+                            "match": "\\d"
+                        },
+                        {
+                            "name": "invalid.illegal.sectionOffset.ndb",
+                            "match": "."
+                        }
+                    ]
+                },
+                {
+                    "begin": "(?<=\\G)(S)",
+                    "end": "(\\+)|(?=:|$)",
+                    "beginCaptures": {
+                        "1": {"name": "keyword.option.sectionOffset.ndb"}
+                    },
+                    "endCaptures": {
+                        "1": {"name": "keyword.option.sectionOffset.ndb"}
+                    },
+                    "patterns": [
+                        {
+                            "name": "variable.other.sectionOffset.ndb",
+                            "match": "\\d"
+                        },
+                        {
+                            "name": "invalid.illegal.sectionOffset.ndb",
+                            "match": "."
+                        }
+                    ]
+                },
+                {
+                    "begin": "(?<=\\G)(\\$)",
+                    "end": "(?=$|:)",
+                    "beginCaptures": {
+                        "1": {"name": "keyword.option.macroId.ndb"}
+                    },
+                    "patterns": [
+                        {
+                            "name": "variable.other.macroId.ndb",
+                            "match": "\\d"
+                        },
+                        {
+                            "name": "invalid.illegal.invalidMacroId.ndb",
+                            "match": "."
+                        }
+                    ]
+                },
+                {
+                    "begin": "(?<=\\G)(VI)",
+                    "end": "(?=$|:)",
+                    "beginCaptures": {
+                        "1": {"name": "keyword.option.versionInfo.ndb"}
+                    },
+                    "patterns": [
+                        {
+                            "name": "invalid.illegal.versionInfo.ndb",
+                            "match": "."
+                        }
+                    ]
+                },
+                {
+                    "match": "([0-9]+)(,)?([0-9]+)?((?=:|$))",
+                    "captures": {
+                        "1": {"name": "variable.other.offset.ndb"},
+                        "2": {"name": "keyword.operator.range.ndb"},
+                        "3": {"name": "variable.other.offset.ndb"}
+                    }
+                },
+                {
+                    "match": "\\*(?=:|$)",
+                    "name": "variable.other.offset.anyWildcard.ndb"
+                },
+                {
+                    "name": "invalid.illegal.usage.ndb",
+                    "match": "."
+                }
+            ]
+        }
+    },
+    "scopeName": "source.ndb"
+}

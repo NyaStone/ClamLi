@@ -1,0 +1,10 @@
+// Examples written based on the clamAV documentation
+MalwareName:0:*:626262[:min_flevel:[max_flevel]]
+EndOffset:0:EOF-4:626262[:min_flevel:[max_flevel]]
+PositiveEntrypointOffset:0:EP+0:626262[:min_flevel:[max_flevel]]
+NegativeEntrypointOffset:0:EP-0:626262[:min_flevel:[max_flevel]]
+LastSectionOffset:0:SL+0:626262[:min_flevel:[max_flevel]]
+SectionOffset:0:S12+0:626262[:min_flevel:[max_flevel]]
+EntireSectionOffset:0:SE12:626262[:min_flevel:[max_flevel]]
+MalwareName:0:VI:626262[:min_flevel:[max_flevel]]
+MacroOffset:0:$12:626262

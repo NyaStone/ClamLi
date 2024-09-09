@@ -16,11 +16,24 @@
       "aliases": ["Logical signature", "ldb"],
       "extensions": [".ldb"],
       "configuration": "./language-configuration.json"
-    }],
+    },
+    {
+      "id": "ndb",
+      "aliases": ["Extended signature", "ndb"],
+      "extensions": [".ndb"],
+      "configuration": "./language-configuration.json"
+    }
+  ],
     "grammars": [{
       "language": "ldb",
       "scopeName": "source.ldb",
       "path": "./syntaxes/ldb.tmLanguage.json"
-    }]
+    },
+    {
+      "language": "ndb",
+      "scopeName": "source.ndb",
+      "path": "./syntaxes/ndb.tmLanguage.json"
+    }
+  ]
   }
 }
