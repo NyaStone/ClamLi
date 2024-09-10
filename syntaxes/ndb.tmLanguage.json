@@ -15,7 +15,10 @@
                     "name": "variable.other.threatName.ndb"
                 },
                 {"include": "#target"},
-                {"include": "#offset"}
+                {"include": "#offset"},
+                {"include": "#contentBasedSignature"},
+                {"include": "#minFlevel"},
+                {"include": "#maxFlevel"}
             ]
         },
         "target": {
@@ -139,6 +142,175 @@
                 },
                 {
                     "name": "invalid.illegal.usage.ndb",
+                    "match": "."
+                }
+            ]
+        },
+        "contentBasedSignature": {
+            "begin": "(?<!:[^:]*:[^:]*:[^:]*)(:)",
+            "end": "(?=$|:)",
+            "beginCaptures": {
+                "1": {"name": "keyword.control.ndb"}
+            },
+			"contentName": "string.interpolated.contentBasedSignature.ndb",
+			"patterns": [
+				{"include": "#matchRangeOfBytes"},
+				{
+					"match": "{(?![^}]*})",
+					"name": "invalid.illegal.contentBasedSignature.openRangeOperator.ndb"
+				},
+				{"include": "#noSplitRangeOfBytes"},
+				{
+					"match": "\\[(?![^\\]]*\\])",
+					"name": "invalid.illegal.contentBasedSignature.openRangeOperator.ndb"
+				},
+				{"include": "#characterClass"},
+				{"include": "#alternateStrings"},
+				{"include": "#byteWildCard"},
+				{"include": "#nimbleWildCard"},
+				{"include": "#illegalCharacter"},
+				{"include": "#incompleteByte"}
+			]
+		},
+        "recursiveContentBasedSignature": {
+			"begin": "(?<=[\\(\\|])",
+			"end": "(?=$|\\)|\\|)",
+			"patterns": [
+				{"include": "#matchRangeOfBytes"},
+				{
+					"match": "{(?![^}]*})",
+					"name": "invalid.illegal.subSignature.openRangeOperator.ndb"
+				},
+				{"include": "#noSplitRangeOfBytes"},
+				{
+					"match": "\\[(?![^\\]]*\\])",
+					"name": "invalid.illegal.subSignature.openRangeOperator.ndb"
+				},
+				{"include": "#characterClass"},
+				{"include": "#alternateStrings"},
+				{"include": "#byteWildCard"},
+				{"include": "#nimbleWildCard"},
+				{"include": "#illegalCharacter"},
+				{"include": "#incompleteByte"}
+			]
+		},
+        "illegalCharacter": {
+			"match": "[^[0-9][a-f]\\?\\*]",
+			"name": "invalid.illegal.subSignature.character.ndb"
+		},
+		"incompleteByte": {
+			"match": "(?<=[^[0-9][a-f]\\?](?:[[0-9][a-f]\\?]{2})*)[[0-9][a-f]\\?](?=[^[0-9][a-f]\\?]|$)",
+			"name": "invalid.illegal.subSignature.incompleteByte.ndb"
+		},
+		"byteWildCard": {
+			"match": "\\*",
+			"name": "keyword.wildcard.byte.ndb"
+		},
+		"nimbleWildCard": {
+			"match": "\\?",
+			"name": "variable.wildcard.byte.ndb"
+		},
+		"matchRangeOfBytes": {
+			"begin": "({)(?=[^}]*})",
+			"end": "(?<=\\1[^}]*)(})",
+			"beginCaptures": {
+				"1": {"name": "keyword.control.ndb"}
+			},
+			"endCaptures": {
+				"1": {"name": "keyword.control.ndb"}
+			},
+			"patterns": [
+				{"match": "[^[0-9]-]", "name": "invalid.illegal.subSignature.matchNBytesRange.ndb"},
+				{"match": "(?<=-.*)-", "name": "invalid.illegal.subSignature.matchNBytesRange.ndb"},
+				{
+					"match": "([0-9]*)(-)?([0-9])*", 
+					"captures": {
+						"1": {"name": "constant.numeric.integer.ndb"},
+						"2": {"name": "keyword.operator.range.ndb"},
+						"3": {"name": "constant.numeric.integer.ndb"}
+					}
+				}
+			]
+		},
+		"noSplitRangeOfBytes": {
+			"begin": "(\\[)(?=[^\\]]*\\])",
+			"end": "(?<=\\1[^\\]]*)(\\])",
+			"beginCaptures": {
+				"1": {"name": "keyword.control.ndb"}
+			},
+			"endCaptures": {
+				"1": {"name": "keyword.control.ndb"}
+			},
+			"patterns": [
+				{"include": "#range"},
+				{"include": "#incompleteRange"},
+				{"match": "[^[0-9]-]", "name": "invalid.illegal.subSignature.matchNBytesRange.ndb"},
+				{"match": "(?<=-.*)-", "name": "invalid.illegal.subSignature.matchNBytesRange.ndb"}
+			]
+		},
+		"characterClass": {
+			"match": "\\([BLW]\\)",
+			"name": "keyword.other.subSignature.characterClass.ndb"
+		},
+		"alternateStrings": {
+			"begin": "(\\()",
+			"end": "(\\))|(?=$)",
+			"beginCaptures": {
+				"1": {"name": "keyword.control.parenthesis.ndb"}
+			},
+			"endCaptures": {
+				"1": {"name": "keyword.control.parenthesis.ndb"}
+			},
+			"patterns": [
+				{"include": "#recursiveContentBasedSignature"},
+				{
+					"match": "\\|",
+					"name": "keyword.operator.or.ndb"
+				}
+			]
+		},
+        "range": {
+			"match": "([0-9]+)(-)([0-9]+)",
+			"captures": {
+				"1": {"name": "constant.numeric.integer.ndb"},
+				"2": {"name": "keyword.operator.range.ndb"},
+				"3": {"name": "constant.numeric.integer.ndb"}
+			}
+		},
+		"incompleteRange": {
+			"match": "(?![0-9]+-[0-9]+).",
+			"name": "invalid.illegal.range.incomplete.ndb"
+		},
+        "minFlevel": {
+            "begin": "(?<!:[^:]*:[^:]*:[^:]*:[^:]*)(:)",
+            "end": "(?=:|$)",
+            "beginCaptures": {
+                "1": {"name": "keyword.control.ndb"}
+            },
+            "patterns": [
+                {
+                    "name": "constant.numeric.integer.flevel.ndb",
+                    "match": "\\d"
+                },
+                {
+                    "name": "invalid.illegal.invalidFlevel.ndb",
+                    "match": "."
+                }
+            ]
+        },
+        "maxFlevel": {
+            "begin": "(?<!:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*)(:)",
+            "end": "(?=$)",
+            "beginCaptures": {
+                "1": {"name": "keyword.control.ndb"}
+            },
+            "patterns": [
+                {
+                    "name": "constant.numeric.integer.flevel.ndb",
+                    "match": "\\d"
+                },
+                {
+                    "name": "invalid.illegal.invalidFlevel.ndb",
                     "match": "."
                 }
             ]
