@@ -8,9 +8,6 @@
 			"contentName": "entity.ldb.logicalSignature",
 			"begin": "(?<=^)(?!$)",
 			"end": "(?=$)",
-			"beginCaptures": {
-				"1": {"name": "variable.other.ldb.signatureName"}
-			},
 			"patterns": [
 				{
 					"match": "(?<=\\G)[^;]+(?=;)",
@@ -87,6 +84,10 @@
 				{
 					"name": "constant.numeric.fileType.ldb",
 					"match": "(?<!\\d)1[012](?!\\d)"
+				},
+				{
+					"name": "invalid.illegal.invalidTargetFileFormat.ldb",
+					"match": "."
 				}
 			]
 		},
@@ -122,9 +123,108 @@
 			"end": "(?=;|$)", 
 			"patterns": [
 				{
-					"begin": "(?<=\\G)(?=[^:;]*:[^:])",
-					"end": "(:)",
-					"name": "keyword.other.subSignature.entryOffset.ldb"
+					"begin": "(?<=\\G)(?=[^;]*:)",
+					"end": "(?=:)",
+					"endCaptures": {
+						"1": {"name": "keyword.option.control.ldb"}
+					},
+					"patterns": [
+						{
+							"name": "keyword.option.entryOffset.ldb",
+							"match": "(?<=\\G)EP[\\+\\-]"
+						},
+						{
+							"name": "keyword.option.endOffset.ldb",
+							"match": "(?<=\\G)EOF\\-"
+						},
+						{
+							"name": "keyword.option.lastSectionOffset.ldb",
+							"match": "(?<=\\G)SL\\+"
+						},
+						{
+							"begin": "(?<=\\G)(SE)",
+							"end": "(?=$|:)",
+							"beginCaptures": {
+								"1": {"name": "keyword.option.entireSectionOffset.ldb"}
+							},
+							"patterns": [
+								{
+									"name": "variable.other.sectionOffset.ldb",
+									"match": "\\d"
+								},
+								{
+									"name": "invalid.illegal.sectionOffset.ldb",
+									"match": "."
+								}
+							]
+						},
+						{
+							"begin": "(?<=\\G)(S)",
+							"end": "(\\+)|(?=:|$)",
+							"beginCaptures": {
+								"1": {"name": "keyword.option.sectionOffset.ldb"}
+							},
+							"endCaptures": {
+								"1": {"name": "keyword.option.sectionOffset.ldb"}
+							},
+							"patterns": [
+								{
+									"name": "variable.other.sectionOffset.ldb",
+									"match": "\\d"
+								},
+								{
+									"name": "invalid.illegal.sectionOffset.ldb",
+									"match": "."
+								}
+							]
+						},
+						{
+							"begin": "(?<=\\G)(\\$)",
+							"end": "(?=$|:)",
+							"beginCaptures": {
+								"1": {"name": "keyword.option.macroId.ldb"}
+							},
+							"patterns": [
+								{
+									"name": "variable.other.macroId.ldb",
+									"match": "\\d"
+								},
+								{
+									"name": "invalid.illegal.invalidMacroId.ldb",
+									"match": "."
+								}
+							]
+						},
+						{
+							"begin": "(?<=\\G)(VI)",
+							"end": "(?=$|:)",
+							"beginCaptures": {
+								"1": {"name": "keyword.option.versionInfo.ldb"}
+							},
+							"patterns": [
+								{
+									"name": "invalid.illegal.versionInfo.ldb",
+									"match": "."
+								}
+							]
+						},
+						{
+							"match": "([0-9]+)(,)?([0-9]+)?((?=:|$))",
+							"captures": {
+								"1": {"name": "variable.other.offset.ldb"},
+								"2": {"name": "keyword.operator.range.ldb"},
+								"3": {"name": "variable.other.offset.ldb"}
+							}
+						},
+						{
+							"match": "\\*(?=:|$)",
+							"name": "variable.other.offset.anyWildcard.ldb"
+						},
+						{
+							"name": "invalid.illegal.usage.ldb",
+							"match": "."
+						}
+					]
 				},
 				{
 					"name": "keyword.other.subSignature.modifier.ldb",
