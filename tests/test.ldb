@@ -7,6 +7,7 @@ logo.png-2;Engine:150-255,Target:0;0&1;49484452;fuzzy_img#af2ad01ed42993c7
 logo.png-2;Engine:150-255,Target:0;0&1;49484452;fuzzy_img#af2ad01ed42993c7#1
 
 ByteCompare;Engine:51-255,Target:0;1;616c61696e;0(<<10#hbe10#>a2,<b3)
+Sig2;Target:0;1;VI:73??746566616e
 
 // Error highlight testing
 Sig2;Target:0;((0|1|2)>5,2)&(3|1);6b(B)6f74656b;616c61;7a6f6c77;737(qsdq|qsdqsd)46566616e

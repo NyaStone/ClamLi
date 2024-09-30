@@ -1,0 +1,10 @@
+// Examples written based on the clamAV documentation
+MalwareName:0:*:6b6f74{2-3}656b:123:234
+EndOffset:0:EOF-4:6b[1-2]6f74656b
+PositiveEntrypointOffset:0:EP+0:61*6c61
+NegativeEntrypointOffset:0:EP-0:7a6f6c??77
+LastSectionOffset:0:SL+0:64[4-4]61616161{2}6262[3-6]65
+SectionOffset:0:S12+0:626262
+EntireSectionOffset:0:SE12:626262
+MalwareName:0:VI:626262
+MacroOffset:0:$12:626262

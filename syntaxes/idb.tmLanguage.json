@@ -1,0 +1,39 @@
+{
+    "name": "Image signature",
+    "patterns": [
+        {"include": "#iconSignature"}
+    ],
+    "repository": {
+        "iconSignature": {
+            "contentName": "entity.iconSignature.idb",
+            "begin": "(?<=^)(?!$)",
+			"end": "(?=$)",
+            "patterns": [
+                {
+                    "begin":  "(?<=\\G)[^:]+(?=:)",
+                    "end": "(?=$|:)",
+                    "name": "variable.other.iconName.idb"
+                },
+                {"include": "#iconGroups"},
+                {"include": "#fuzzyHash"}
+            ]
+        },
+        "iconGroups": {
+            "begin": "(?<!:[^:]*:[^:]*)(:)",
+            "end": "(?=$|:)",
+            "beginCaptures": {
+                "1": {"name": "keyword.control.idb"}
+            },
+            "name": "constant.numeric.idb"
+        },
+        "fuzzyHash": {
+            "begin": "(?<=:[^:]*:[^:]*)(:)",
+            "end": "(?=$)",
+            "beginCaptures": {
+                "1": {"name": "keyword.control.idb"}
+            },
+            "name": "string.interpolated.imageHash.idb"
+        }
+    },
+    "scopeName": "source.idb"
+}

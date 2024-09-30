@@ -5,6 +5,8 @@ This VScode extention aims at making writing ClamAV files easier to read and wri
 ## Features and Planned ones
 
 - [x] Provide a grammar file for .ldb files
+- [x] Provide a grammar file for .idb files
+- [x] Provide a grammar file for .ndb files
 - [ ] Provide linting/intellisense for .ldb files
 - [ ] Provide usefull macros 
 
@@ -31,7 +33,6 @@ code --uninstall-extension someone.clamli
 ## Known Issues
 
 Not on VSCode marketplace yet.
-Macro/.ndb files support missing.
-Icon signatures for PE files not supported.
 Improvements to the grammar are needed.
 Using regexes to parse potential errors is a bit clunky.
+Not 100% sure of all features usage.

@@ -16,11 +16,35 @@
       "aliases": ["Logical signature", "ldb"],
       "extensions": [".ldb"],
       "configuration": "./language-configuration.json"
-    }],
+    },
+    {
+      "id": "ndb",
+      "aliases": ["Extended signature", "ndb"],
+      "extensions": [".ndb"],
+      "configuration": "./language-configuration.json"
+    },
+    {
+      "id": "idb",
+      "aliases": ["Image signature", "idb"],
+      "extensions": [".idb"],
+      "configuration": "./language-configuration.json"
+    }
+  ],
     "grammars": [{
       "language": "ldb",
       "scopeName": "source.ldb",
       "path": "./syntaxes/ldb.tmLanguage.json"
-    }]
+    },
+    {
+      "language": "ndb",
+      "scopeName": "source.ndb",
+      "path": "./syntaxes/ndb.tmLanguage.json"
+    },
+    {
+      "language": "idb",
+      "scopeName": "source.idb",
+      "path": "./syntaxes/idb.tmLanguage.json"
+    }
+  ]
   }
 }
